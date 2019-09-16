@@ -1,0 +1,105 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="css/login2.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<div class="login" style="margin-top: 50px;">
+
+		<div class="header">
+			<div class="switch" id="switch">
+				<a class="switch_btn_focus" id="switch_qlogin"
+					href="javascript:void(0);" tabindex="7">快速登录</a> <a
+					class="switch_btn" id="switch_login" href="javascript:void(0);"
+					tabindex="8">快速注册</a>
+				<div class="switch_bottom" id="switch_bottom"
+					style="position: absolute; width: 64px; left: 0px;"></div>
+			</div>
+		</div>
+
+
+		<div class="web_qr_login" id="web_qr_login"
+			style="display: block; height: 235px;">
+
+			<!--登录-->
+			<div class="web_login" id="web_login">
+				<div class="login-box">
+					<div class="login_form">
+						<input type="hidden" name="did" value="0" /> <input type="hidden"
+							name="to" value="log" />
+						<div class="uinArea" id="uinArea">
+							<label class="input-tips" for="u">帐号：</label>
+							<div class="inputOuter" id="uArea">
+
+								<input type="text" id="username" name="username"
+									class="inputstyle" /> <span id="username_error"></span>
+							</div>
+						</div>
+						<div class="pwdArea" id="pwdArea">
+							<label class="input-tips" for="p">密码：</label>
+							<div class="inputOuter" id="pArea">
+
+								<input type="password" id="password" name="password"
+									class="inputstyle" /> <span id="password_error"
+									style="color: green"></span> <span id="register_success"
+									style="color: red"></span>
+							</div>
+						</div>
+
+						<div style="padding-left: 50px; margin-top: 20px;">
+							<input id="login_form" type="button" value="登 录"
+								style="width: 150px;" class="button_blue" onclick="login()"></input>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--登录end-->
+		</div>
+	</div>
+	<script type="text/javascript" src="/js/jquery.min.js"></script>
+	<script>
+	function login(){
+		$("#username_error").html("");
+		$("#password_erro").html("");
+		
+		var name = $("#username").val();
+		var password = $("#password").val();
+		var check = true;//表单通过检测
+		
+		if(username == null){
+			$("#username_error").html("帐号不能为空");
+			check=false;
+		}
+		if(password == null){
+			$("#password_erro").html("密码不能为空");
+			check=false;
+		}
+		
+		if(check){
+			$.ajax({
+				url:"http://localhost:7001/user/login",
+				type:"post",
+				data:{"name":name,"password":password},
+				dataType:"json",
+				success:function(result){
+					if(result.code == 1){
+						$("#username_error").html(result.msg);
+					}else if(result.code == 0){
+						$("#register_success").html(result.msg);
+                        var index = parent.layer.getFrameIndex(window.name);
+                        setTimeout(function(){
+                        	window.parent.location.reload();
+                        }
+                        	,1000); 
+					}
+				},
+				error:function(){
+					alert("登录失败");
+				}
+			});
+		}
+	}
+	</script>
+
+</body>
+</html>
